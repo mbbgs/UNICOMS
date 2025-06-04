@@ -1,6 +1,6 @@
 module.exports.isPasswordComplex = (password) => {
-  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  return regex.test(password);
+	const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+	return regex.test(password);
 };
 
 module.exports.sendJson = (res, status, success, message, data = null) => {
@@ -67,3 +67,18 @@ module.exports.generate = function(long = 8) {
 	return generateRandomString(long, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
 }
 
+module.exports.isNonEmptyString = (value) => typeof value === 'string' && value.trim().length > 0;
+
+module.exports.userData = (user) => {
+	return {
+		username: user.username || '',
+		firstName: user.firstName,
+		otherNames: user.otherNames,
+		level: user.level,
+		registeredCourses: user.registeredCourses || [],
+		results: user.results || [],
+		department: user.department || '',
+		faculty: user.faculty || '',
+		matric: user.matric || ''
+	}
+}

@@ -3,7 +3,7 @@ const User = require('../models/User.js');
 const fs = require('fs')
 
 const { parseStudentCSV } = require('../services/csvService');
-const { logError, sendJson } = require('../utils/helpers.js')
+const { logError, sendJson, userData } = require('../utils/helpers.js')
 const { hashToken: hashPassword } = require('../services/Scrypt.js')
 
 
@@ -77,11 +77,12 @@ module.exports.AddStudentsFromCSV = async function(req, res) {
       return sendJson(res, 400, false, 'CSV file is empty or invalid');
     }
     
-    // Optional: Check for duplicates before inserting
+    // Check for duplicates before inserting
     for (const s of students) {
-      const exists = await User.findOne({ $or: [{ email: s.email }, { matric: s.matric }] });
+      const exists = await User.findOne({ $or: [{ email: String(s.email).trim() }, { matric: String(s.matric).trim() }] });
       if (exists) throw new Error(`Duplicate student: ${s.email} or ${s.matric}`);
     }
+    
     
     await User.insertMany(students, { session });
     await session.commitTransaction();
@@ -98,3 +99,25 @@ module.exports.AddStudentsFromCSV = async function(req, res) {
     return sendJson(res, 500, false, 'Failed to import students');
   }
 };
+
+
+
+module.exports.getStudent = async function(req, res) {
+  try {
+    
+    const { studentId = '' } = req.body
+    if (!studentId.trim()) {
+      return sendJson(res, 400, false, 'Invalid studentID')
+    }
+    const isUser = await User.findOne({ userId: studentId, role: 'Student' }).select('-_id -password')
+    if (!isUser) {
+      return sendJson(res, 404, false, 'student does not exist')
+    }
+    const data = userData(isUser)
+    
+    return sendJson(res, 200, true, 'student found', data)
+  } catch (error) {
+    logError('Error getting student', error)
+    return sendJson(res, 500, false, 'Internal Server Error')
+  }
+}

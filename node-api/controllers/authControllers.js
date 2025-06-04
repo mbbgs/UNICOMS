@@ -198,26 +198,6 @@ module.exports.userLogin = async function(req, res) {
 };
 
 
-module.exports.getUserProfile = async function(req, res) {
-  try {
-    const user = req.session?.user;
-    if (!user) {
-      return sendJson(res, 401, false, 'You are not authenticated')
-    }
-    const isUser = await User.findOne({ userId: user?.userId, role: user.role })
-    if (!isUser) {
-      return sendJson(res, 404, false, 'user not found')
-    }
-    
-    const getData = studentData(isUser)
-    return sendJson(res, 200, true, 'user profile', {
-      ...getData
-    })
-  } catch (error) {
-    logError('Error getting user profile', error)
-    return sendJson(res, 500, false, 'Internal server error occurred')
-  }
-}
 
 
 module.exports.logoutUser = async function(req, res) {
@@ -235,20 +215,5 @@ module.exports.logoutUser = async function(req, res) {
   } catch (error) {
     logError('Error clearing user cookies', error)
     return sendJson(res, 500, false, 'Internal server error occurred')
-  }
-}
-
-
-const UserData = (user) => {
-  return {
-    username: user.username || '',
-    firstName: user.firstName,
-    otherNames: user.otherNames,
-    level: user.level,
-    registeredCourses: user.registeredCourses || [],
-    results: user.results || [],
-    department: user.department || '',
-    faculty: user.faculty || '',
-    matric: user.matric || ''
   }
 }

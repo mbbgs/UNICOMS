@@ -86,17 +86,12 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre('validate', function(next) {
-  if (this.role === 'student') {
+  if (this.role === 'Student') {
     if (!this.matric || !this.level || !this.department) {
       return next(new Error('Students must have matric, level, and department'))
     }
   }
   
-  if (this.role === 'lecturer') {
-    if (!this.department) {
-      return next(new Error('Lecturers must have a department'))
-    }
-  }
   
   next()
 })

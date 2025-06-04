@@ -1,6 +1,7 @@
 // services/csvService.js
 const fs = require('fs');
 const { parse } = require('fast-csv');
+const { generate } = require('../utils/helpers.js')
 
 /**
  * Reads a CSV file and returns an array of student objects.
@@ -16,10 +17,12 @@ async function parseStudentCSV(filePath) {
       .on('data', (row) => {
         // Optional: sanitize/validate row fields
         students.push({
+          userId: generate(11),
           name: row.name,
           email: row.email,
           password: row.password,
           matric: row.matric,
+          faculty: row.faculty,
           department: row.department,
           role: 'Student'
         });
