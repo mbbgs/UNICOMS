@@ -3,7 +3,7 @@
 
 🔐 Authentication API Documentation
 
-Base URL: https://<baseUrl>/api/auth
+Base URL: https://baseUrl/api/auth
 
 
 ---
