@@ -1,0 +1,18 @@
+Missing dependencies
+* dotenv: ./src/app.js
+* express: ./src/app.js
+* cors: ./src/app.js
+* helmet: ./src/app.js
+* compression: ./src/app.js
+* body-parser: ./src/app.js
+* morgan: ./src/app.js
+* hpp: ./src/app.js
+* express-mongo-sanitize: ./src/app.js
+* mongoose: ./src/www/bin/database.js
+* fast-csv: ./src/services/CsvParser.js
+* jsonwebtoken: ./src/services/jwt.js
+* redis: ./src/services/redis.js
+* ip-range-check: ./src/middlewares/botBlocker.js
+* winston: ./src/middlewares/errorHandlers.js
+* multer: ./src/middlewares/fileUpload.js
+* express-rate-limit: ./src/middlewares/ratelimter.js

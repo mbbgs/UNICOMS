@@ -1,0 +1,23 @@
+{
+  "name": "unicoms",
+  "version": "1.0.0",
+  "description": "University Exam and Course Management Sysyem.",
+  "main": "src/www/bin/server.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node ./src/www/bin/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbbgs/unicoms.git"
+  },
+  "author": "Mbbgs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mbbgs/unicoms/issues"
+  },
+  "homepage": "https://github.com/mbbgs/unicoms#readme"
+}

@@ -1,2 +1,2 @@
 # UNICOMS
-University course management system 
+University Exam and Course Management System 
