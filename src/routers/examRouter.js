@@ -1,11 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const {
-  CreateExam,
-  AddExamDepartment,
-  RemoveExamDepartment,
-  GetExam
+ CreateExam,
+ AddExamDepartment,
+ RemoveExamDepartment,
 } = require('../controllers/examControllers.js');
+
+const {
+ SubmitExam,
+ GetExam
+} = require('../controllers/examExtension.js');
+
 const { requireSAAuth, requireLogin } = require('../middlewares/auth.js');
 
 /**
@@ -68,6 +73,48 @@ const { requireSAAuth, requireLogin } = require('../middlewares/auth.js');
  *         description: Internal Server Error
  */
 router.post('/', requireSAAuth, CreateExam);
+
+/**
+ * @swagger
+ * /api/exams/submit:
+ *   post:
+ *     summary: Submit an exam
+ *     tags: [Exams]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - examId
+ *               - answers
+ *             properties:
+ *               examId:
+ *                 type: string
+ *               answers:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *     responses:
+ *       200:
+ *         description: Submission successful
+ *       400:
+ *         description: Missing examId or answers
+ *       401:
+ *         description: Unauthorized or invalid role
+ *       403:
+ *         description: Exam not started or ended
+ *       404:
+ *         description: Exam not found
+ *       409:
+ *         description: Already submitted
+ *       500:
+ *         description: Internal Server Error
+ */
+router.post('/submit', requireLogin, SubmitExam);
 
 /**
  * @swagger

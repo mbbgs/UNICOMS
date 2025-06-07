@@ -156,3 +156,26 @@ module.exporta.validateDepartmentInput = function(data) {
 module.exports.trimBody = function(body) {
 	return String(body).trim()
 }
+
+
+
+module.exports.calculateScore = function(answers, correctAnswers) {
+	// Example simple scoring: +1 per correct answer
+	let score = 0;
+	for (let i = 0; i < correctAnswers.length; i++) {
+		if (answers[i] && answers[i] === correctAnswers[i]) {
+			score++;
+		}
+	}
+	return score;
+}
+
+module.exports.getGrade = function(score, total) {
+	const percent = (score / total) * 100;
+	if (percent >= 80) return 'A';
+	if (percent >= 70) return 'B';
+	if (percent >= 60) return 'C';
+	if (percent >= 50) return 'D';
+	if (percent >= 40) return 'E';
+	return 'F';
+}

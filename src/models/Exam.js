@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+const {
+  generate
+} = require('../utils/helpers.js')
+
+
+
 const questionSchema = new mongoose.Schema({
   text: { type: String, required: true },
   options: {
@@ -23,6 +29,10 @@ const questionSchema = new mongoose.Schema({
 
 
 const examSchema = new mongoose.Schema({
+  examId: {
+    type: String,
+    required: true
+  },
   courseTitle: {
     type: String,
     required: true,
@@ -43,7 +53,7 @@ const examSchema = new mongoose.Schema({
   departments: [{
     type: mongoose.Schema.Types.ObjectId,
     required: true
-    ref:'Department'
+    ref: 'Department'
   }],
   level: {
     type: String,
@@ -60,15 +70,28 @@ const examSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 examSchema.statics.getExam = async function(date, departmentId, courseTitle) {
-  const exam = await this.findOne({
-    date,
-    courseTitle: courseTitle.toLowerCase(),
-    departments: departmentId
-  });
+  const exams = await this.aggregate([
+  {
+    $match: {
+      date: new Date(date),
+      courseTitle: courseTitle.toLowerCase(),
+      departments: departmentId
+    }
+  },
+  {
+    $project: {
+      __v: 0,
+      _id: 0,
+      "questions.correctAnswer": 0,
+    }
+  }]);
   
-  if (!exam) return { found: false, message: 'exam not found' };
-  return { found: true, exam };
+  if (!exams.length) return { found: false, message: 'exam not found' };
+  
+  return { found: true, exam: exams[0] };
 };
+
+
 
 examSchema.statics.createExam = async function({
   date,
@@ -93,6 +116,7 @@ examSchema.statics.createExam = async function({
   }
   
   const exam = new this({
+    examId: generate(10),
     date,
     departments: [departmentId],
     courseTitle: courseTitle.toLowerCase(),

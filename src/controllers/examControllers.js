@@ -9,6 +9,8 @@ const {
 } = require('../utils/helpers.js');
 
 
+const { getClient } = require('../services/redis.js');
+
 
 // CREATE
 module.exports.CreateExam = async function(req, res) {
@@ -35,40 +37,7 @@ module.exports.CreateExam = async function(req, res) {
   }
 };
 
-// READ
-module.exports.GetExam = async function(req, res) {
-  try {
-    const { date, code, courseTitle } = req.query;
-    
-    if (!date || !code || !courseTitle) {
-      return sendJson(res, 400, false, 'Missing query parameters');
-    }
-    
-    const isDepartment = await Department.findOne({ code: String(code)?.trim().toUpperCase() })
-    if (!isDepartment) return sendJson(res, 400, false, 'Department does not exist')
-    
-    const result = await Exam.getExam(date, isDepartment._id, courseTitle);
-    
-    if (!result.found) {
-      return sendJson(res, 404, false, result.message);
-    }
-    const now = new Date();
-    
-    if (now < result.exam.startTime) {
-      return sendJson(res, 403, false, 'Exam has not started yet');
-    }
-    
-    if (now > result.startTime: new Date(startTime),
-      endTime: new Date(endTime), exam.endTime) {
-      return sendJson(res, 403, false, 'Exam has ended');
-    }
-    
-    return sendJson(res, 200, true, 'Exam retrieved successfully', { data: result.exam });
-  } catch (error) {
-    logError('Error getting exam', error)
-    return sendJson(res, 500, false, 'Internal Server Error');
-  }
-};
+
 
 // ADD DEPARTMENT
 module.exports.AddExamDepartment = async function(req, res) {
